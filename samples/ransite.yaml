@@ -1,0 +1,4 @@
+apiVersion: lcm.openshift.io/v1alpha1
+kind: RANSite
+metadata:
+  name: lol-site
