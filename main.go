@@ -31,7 +31,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
-	lcmv1alpha1 "github.com/redhat-ztp/ran-lcm/api/v1alpha1"
+	ranv1alpha1 "github.com/redhat-ztp/ran-lcm/api/v1alpha1"
 	"github.com/redhat-ztp/ran-lcm/controllers"
 	//+kubebuilder:scaffold:imports
 )
@@ -44,7 +44,7 @@ var (
 func init() {
 	utilruntime.Must(clientgoscheme.AddToScheme(scheme))
 
-	utilruntime.Must(lcmv1alpha1.AddToScheme(scheme))
+	utilruntime.Must(ranv1alpha1.AddToScheme(scheme))
 	//+kubebuilder:scaffold:scheme
 }
 
@@ -78,12 +78,12 @@ func main() {
 		os.Exit(1)
 	}
 
-	if err = (&controllers.RANSiteReconciler{
+	if err = (&controllers.SiteReconciler{
 		Client: mgr.GetClient(),
-		Log:    ctrl.Log.WithName("controllers").WithName("RANSite"),
+		Log:    ctrl.Log.WithName("controllers").WithName("Site"),
 		Scheme: mgr.GetScheme(),
 	}).SetupWithManager(mgr); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "RANSite")
+		setupLog.Error(err, "unable to create controller", "controller", "Site")
 		os.Exit(1)
 	}
 	//+kubebuilder:scaffold:builder

@@ -6,20 +6,20 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.4.1
   creationTimestamp: null
-  name: ransites.lcm.openshift.io
+  name: sites.ran.openshift.io
 spec:
-  group: lcm.openshift.io
+  group: ran.openshift.io
   names:
-    kind: RANSite
-    listKind: RANSiteList
-    plural: ransites
-    singular: ransite
+    kind: Site
+    listKind: SiteList
+    plural: sites
+    singular: site
   scope: Namespaced
   versions:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: RANSite is the Schema for the ransites API
+        description: Site is the Schema for the sites API
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -34,15 +34,15 @@ spec:
           metadata:
             type: object
           spec:
-            description: RANSiteSpec defines the desired state of RANSite
+            description: SiteSpec defines the desired state of Site
             properties:
-              name:
-                description: Foo is an example field of RANSite. Edit ransite_types.go
-                  to remove/update
+              foo:
+                description: Foo is an example field of Site. Edit site_types.go to
+                  remove/update
                 type: string
             type: object
           status:
-            description: RANSiteStatus defines the observed state of RANSite
+            description: SiteStatus defines the observed state of Site
             type: object
         type: object
     served: true

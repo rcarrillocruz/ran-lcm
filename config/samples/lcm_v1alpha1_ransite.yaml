@@ -1,7 +1,0 @@
-apiVersion: lcm.openshift.io/v1alpha1
-kind: RANSite
-metadata:
-  name: ransite-sample
-spec:
-  # Add fields here
-  foo: bar

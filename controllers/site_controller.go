@@ -24,31 +24,31 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
-	lcmv1alpha1 "github.com/redhat-ztp/ran-lcm/api/v1alpha1"
+	ranv1alpha1 "github.com/redhat-ztp/ran-lcm/api/v1alpha1"
 )
 
-// RANSiteReconciler reconciles a RANSite object
-type RANSiteReconciler struct {
+// SiteReconciler reconciles a Site object
+type SiteReconciler struct {
 	client.Client
 	Log    logr.Logger
 	Scheme *runtime.Scheme
 }
 
-//+kubebuilder:rbac:groups=lcm.openshift.io,resources=ransites,verbs=get;list;watch;create;update;patch;delete
-//+kubebuilder:rbac:groups=lcm.openshift.io,resources=ransites/status,verbs=get;update;patch
-//+kubebuilder:rbac:groups=lcm.openshift.io,resources=ransites/finalizers,verbs=update
+//+kubebuilder:rbac:groups=ran.openshift.io,resources=sites,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups=ran.openshift.io,resources=sites/status,verbs=get;update;patch
+//+kubebuilder:rbac:groups=ran.openshift.io,resources=sites/finalizers,verbs=update
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
 // TODO(user): Modify the Reconcile function to compare the state specified by
-// the RANSite object against the actual cluster state, and then
+// the Site object against the actual cluster state, and then
 // perform operations to make the cluster state reflect the state specified by
 // the user.
 //
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.8.3/pkg/reconcile
-func (r *RANSiteReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	_ = r.Log.WithValues("ransite", req.NamespacedName)
+func (r *SiteReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
+	_ = r.Log.WithValues("site", req.NamespacedName)
 
 	// your logic here
 
@@ -56,8 +56,8 @@ func (r *RANSiteReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 }
 
 // SetupWithManager sets up the controller with the Manager.
-func (r *RANSiteReconciler) SetupWithManager(mgr ctrl.Manager) error {
+func (r *SiteReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
-		For(&lcmv1alpha1.RANSite{}).
+		For(&ranv1alpha1.Site{}).
 		Complete(r)
 }

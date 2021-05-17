@@ -1,20 +1,24 @@
-# permissions for end users to view ransites.
+# permissions for end users to edit sites.
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: ransite-viewer-role
+  name: site-editor-role
 rules:
 - apiGroups:
-  - lcm.openshift.io
+  - ran.openshift.io
   resources:
-  - ransites
+  - sites
   verbs:
+  - create
+  - delete
   - get
   - list
+  - patch
+  - update
   - watch
 - apiGroups:
-  - lcm.openshift.io
+  - ran.openshift.io
   resources:
-  - ransites/status
+  - sites/status
   verbs:
   - get

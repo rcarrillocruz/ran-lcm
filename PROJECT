@@ -12,8 +12,8 @@ resources:
     namespaced: true
   controller: true
   domain: openshift.io
-  group: lcm
-  kind: RANSite
+  group: ran
+  kind: Site
   path: github.com/redhat-ztp/ran-lcm/api/v1alpha1
   version: v1alpha1
 version: "3"

@@ -23,17 +23,17 @@ import (
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
 // NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
 
-// RANSiteSpec defines the desired state of RANSite
-type RANSiteSpec struct {
+// SiteSpec defines the desired state of Site
+type SiteSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 
-	// Foo is an example field of RANSite. Edit ransite_types.go to remove/update
-	Name string `json:"name,omitempty"`
+	// Foo is an example field of Site. Edit site_types.go to remove/update
+	Foo string `json:"foo,omitempty"`
 }
 
-// RANSiteStatus defines the observed state of RANSite
-type RANSiteStatus struct {
+// SiteStatus defines the observed state of Site
+type SiteStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 }
@@ -41,24 +41,24 @@ type RANSiteStatus struct {
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
 
-// RANSite is the Schema for the ransites API
-type RANSite struct {
+// Site is the Schema for the sites API
+type Site struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   RANSiteSpec   `json:"spec,omitempty"`
-	Status RANSiteStatus `json:"status,omitempty"`
+	Spec   SiteSpec   `json:"spec,omitempty"`
+	Status SiteStatus `json:"status,omitempty"`
 }
 
 //+kubebuilder:object:root=true
 
-// RANSiteList contains a list of RANSite
-type RANSiteList struct {
+// SiteList contains a list of Site
+type SiteList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []RANSite `json:"items"`
+	Items           []Site `json:"items"`
 }
 
 func init() {
-	SchemeBuilder.Register(&RANSite{}, &RANSiteList{})
+	SchemeBuilder.Register(&Site{}, &SiteList{})
 }
