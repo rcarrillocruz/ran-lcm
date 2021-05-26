@@ -1,0 +1,24 @@
+# permissions for end users to edit grouppolicies.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: grouppolicy-editor-role
+rules:
+- apiGroups:
+  - ran.openshift.io
+  resources:
+  - grouppolicies
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - ran.openshift.io
+  resources:
+  - grouppolicies/status
+  verbs:
+  - get
