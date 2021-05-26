@@ -4,4 +4,5 @@ resources:
 - ran_v1alpha1_group.yaml
 - ran_v1alpha1_grouppolicy.yaml
 - ran_v1alpha1_grouppolicybinding.yaml
+- ran_v1alpha1_sitebackup.yaml
 #+kubebuilder:scaffold:manifestskustomizesamples
