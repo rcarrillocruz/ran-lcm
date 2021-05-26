@@ -102,6 +102,14 @@ func main() {
 		setupLog.Error(err, "unable to create controller", "controller", "GroupPolicy")
 		os.Exit(1)
 	}
+	if err = (&controllers.GroupPolicyBindingReconciler{
+		Client: mgr.GetClient(),
+		Log:    ctrl.Log.WithName("controllers").WithName("GroupPolicyBinding"),
+		Scheme: mgr.GetScheme(),
+	}).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "GroupPolicyBinding")
+		os.Exit(1)
+	}
 	//+kubebuilder:scaffold:builder
 
 	if err := mgr.AddHealthzCheck("healthz", healthz.Ping); err != nil {
