@@ -65,40 +65,45 @@ func (r *GroupReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl
 		return ctrl.Result{}, err
 	}
 
-	err = r.ensurePlacementRule(ctx, group)
+	// No group upgrade rules for now, assume all clusters will upgrade serially
+	// by creating a PlacementRule/PlacementBinding/Policy 3-tuple per cluster
+	for _, v := range group.Spec.Clusters {
+		err = r.ensurePlacementRule(ctx, group, v)
+		if err != nil {
+			return ctrl.Result{}, err
+		}
+	}
 
 	return ctrl.Result{}, nil
 }
 
-func (r *GroupReconciler) ensurePlacementRule(ctx context.Context, group *ranv1alpha1.Group) error {
-	for _, v := range group.Spec.Clusters {
-		r.Log.Info("Creating PlacementRule object", "cluster", v)
-		pr := r.newPlacementRule(ctx, group, v)
-		r.Log.Info("Created PlacementRule object", "placementRule", pr)
+func (r *GroupReconciler) ensurePlacementRule(ctx context.Context, group *ranv1alpha1.Group, cluster string) error {
+	r.Log.Info("Creating PlacementRule object", "cluster", cluster)
+	pr := r.newPlacementRule(ctx, group, cluster)
+	r.Log.Info("Created PlacementRule object", "placementRule", pr)
 
-		if err := controllerutil.SetControllerReference(group, pr, r.Scheme); err != nil {
+	if err := controllerutil.SetControllerReference(group, pr, r.Scheme); err != nil {
+		return err
+	}
+
+	foundPlacementRule := &unstructured.Unstructured{}
+	foundPlacementRule.SetGroupVersionKind(schema.GroupVersionKind{
+		Group:   "apps.open-cluster-management.io",
+		Kind:    "PlacementRule",
+		Version: "v1",
+	})
+	err := r.Client.Get(ctx, client.ObjectKey{
+		Name:      group.Name + "-" + cluster + "placement-rule",
+		Namespace: group.Namespace,
+	}, foundPlacementRule)
+	if err != nil && errors.IsNotFound((err)) {
+		err = r.Client.Create(ctx, pr)
+		if err != nil {
 			return err
 		}
-
-		foundPlacementRule := &unstructured.Unstructured{}
-		foundPlacementRule.SetGroupVersionKind(schema.GroupVersionKind{
-			Group:   "apps.open-cluster-management.io",
-			Kind:    "PlacementRule",
-			Version: "v1",
-		})
-		err := r.Client.Get(ctx, client.ObjectKey{
-			Name:      group.Name + "-" + v + "placement-rule",
-			Namespace: group.Namespace,
-		}, foundPlacementRule)
-		if err != nil && errors.IsNotFound((err)) {
-			err = r.Client.Create(ctx, pr)
-			if err != nil {
-				return err
-			}
-			r.Log.Info("Created K8s PlacementRule object for", "placementRule", pr)
-		} else if err != nil {
-			return err
-		}
+		r.Log.Info("Created K8s PlacementRule object for", "placementRule", pr)
+	} else if err != nil {
+		return err
 	}
 
 	return nil
