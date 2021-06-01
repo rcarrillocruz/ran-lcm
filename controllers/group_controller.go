@@ -20,9 +20,13 @@ import (
 	"context"
 
 	"github.com/go-logr/logr"
+	"k8s.io/apimachinery/pkg/api/errors"
+	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/runtime/schema"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 
 	ranv1alpha1 "github.com/redhat-ztp/ran-lcm/api/v1alpha1"
 )
@@ -51,8 +55,81 @@ func (r *GroupReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl
 	_ = r.Log.WithValues("group", req.NamespacedName)
 
 	// your logic here
+	group := &ranv1alpha1.Group{}
+	err := r.Get(ctx, req.NamespacedName, group)
+	if err != nil {
+		if errors.IsNotFound(err) {
+			return ctrl.Result{}, nil
+		}
+		r.Log.Error(err, "Failed to get Group")
+		return ctrl.Result{}, err
+	}
+
+	err = r.ensurePlacementRule(ctx, group)
 
 	return ctrl.Result{}, nil
+}
+
+func (r *GroupReconciler) ensurePlacementRule(ctx context.Context, group *ranv1alpha1.Group) error {
+	for _, v := range group.Spec.Clusters {
+		r.Log.Info("Creating PlacementRule object", "cluster", v)
+		pr := r.newPlacementRule(ctx, group, v)
+		r.Log.Info("Created PlacementRule object", "placementRule", pr)
+
+		if err := controllerutil.SetControllerReference(group, pr, r.Scheme); err != nil {
+			return err
+		}
+
+		foundPlacementRule := &unstructured.Unstructured{}
+		foundPlacementRule.SetGroupVersionKind(schema.GroupVersionKind{
+			Group:   "apps.open-cluster-management.io",
+			Kind:    "PlacementRule",
+			Version: "v1",
+		})
+		err := r.Client.Get(ctx, client.ObjectKey{
+			Name:      group.Name + "-" + v + "placement-rule",
+			Namespace: group.Namespace,
+		}, foundPlacementRule)
+		if err != nil && errors.IsNotFound((err)) {
+			err = r.Client.Create(ctx, pr)
+		} else if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (r *GroupReconciler) newPlacementRule(ctx context.Context, group *ranv1alpha1.Group, cluster string) *unstructured.Unstructured {
+	u := &unstructured.Unstructured{}
+	u.Object = map[string]interface{}{
+		"metadata": map[string]interface{}{
+			"name":      group.Name + "-" + cluster + "-" + "placement-rule",
+			"namespace": group.Namespace,
+			"labels": map[string]interface{}{
+				"app": "ran-lcm",
+			},
+		},
+		"spec": map[string]interface{}{
+			"clusterConditions": []map[string]interface{}{
+				{
+					"type": "OK",
+				},
+			},
+			"clusters": []map[string]interface{}{
+				{
+					"name": cluster,
+				},
+			},
+		},
+	}
+	u.SetGroupVersionKind(schema.GroupVersionKind{
+		Group:   "apps.open-cluster-management.io",
+		Kind:    "PlacementRule",
+		Version: "v1",
+	})
+
+	return u
 }
 
 // SetupWithManager sets up the controller with the Manager.

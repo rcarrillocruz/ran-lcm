@@ -9,6 +9,110 @@ rules:
 - apiGroups:
   - ran.openshift.io
   resources:
+  - grouppolicies
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - ran.openshift.io
+  resources:
+  - grouppolicies/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - ran.openshift.io
+  resources:
+  - grouppolicies/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - ran.openshift.io
+  resources:
+  - grouppolicybindings
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - ran.openshift.io
+  resources:
+  - grouppolicybindings/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - ran.openshift.io
+  resources:
+  - grouppolicybindings/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - ran.openshift.io
+  resources:
+  - groups
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - ran.openshift.io
+  resources:
+  - groups/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - ran.openshift.io
+  resources:
+  - groups/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - ran.openshift.io
+  resources:
+  - sitebackups
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - ran.openshift.io
+  resources:
+  - sitebackups/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - ran.openshift.io
+  resources:
+  - sitebackups/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - ran.openshift.io
+  resources:
   - sites
   verbs:
   - create

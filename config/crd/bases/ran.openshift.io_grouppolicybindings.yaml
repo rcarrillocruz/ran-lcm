@@ -6,20 +6,21 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.4.1
   creationTimestamp: null
-  name: groups.ran.openshift.io
+  name: grouppolicybindings.ran.openshift.io
 spec:
   group: ran.openshift.io
   names:
-    kind: Group
-    listKind: GroupList
-    plural: groups
-    singular: group
+    kind: GroupPolicyBinding
+    listKind: GroupPolicyBindingList
+    plural: grouppolicybindings
+    singular: grouppolicybinding
   scope: Namespaced
   versions:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: Group is the Schema for the groups API
+        description: GroupPolicyBinding is the Schema for the grouppolicybindings
+          API
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -34,17 +35,15 @@ spec:
           metadata:
             type: object
           spec:
-            description: GroupSpec defines the desired state of Group
+            description: GroupPolicyBindingSpec defines the desired state of GroupPolicyBinding
             properties:
-              clusters:
-                description: Foo is an example field of Group. Edit group_types.go
-                  to remove/update Foo string `json:"foo,omitempty"`
-                items:
-                  type: string
-                type: array
+              foo:
+                description: Foo is an example field of GroupPolicyBinding. Edit grouppolicybinding_types.go
+                  to remove/update
+                type: string
             type: object
           status:
-            description: GroupStatus defines the observed state of Group
+            description: GroupPolicyBindingStatus defines the observed state of GroupPolicyBinding
             type: object
         type: object
     served: true
