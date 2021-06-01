@@ -92,6 +92,10 @@ func (r *GroupReconciler) ensurePlacementRule(ctx context.Context, group *ranv1a
 		}, foundPlacementRule)
 		if err != nil && errors.IsNotFound((err)) {
 			err = r.Client.Create(ctx, pr)
+			if err != nil {
+				return err
+			}
+			r.Log.Info("Created K8s PlacementRule object for", "placementRule", pr)
 		} else if err != nil {
 			return err
 		}
